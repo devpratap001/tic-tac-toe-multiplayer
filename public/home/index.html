@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tic-Tac-Toe Multiplayer</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="logo">
+            Tic Tac Toe
+        </div>
+        <form id="form">
+            <input type="text" placeholder="Player Name" />
+            <button type="submit" form="form">Search Opponent</button>
+        </form>
+        <img src="loader.gif" alt="loading..." height="200px" class="loader" />
+    </div>
+    <div class="game">
+        <div class="board">
+            <div class="logo">Tic Tac Toe</div>
+            <div class="userCardOne">
+                <p class="playerOne"></p>
+                <p class="signOne"></p>
+            </div>
+            <div class="userCardTwo">
+                <p class="playerTwo"></p>
+                <p class="signTwo"></p>
+            </div>
+            <div class="boxes">
+                <button type="button" id="1" class="column"></button>
+                <button type="button" id="2" class="column"></button>
+                <button type="button" id="3" class="column"></button>
+                <button type="button" id="4" class="column"></button>
+                <button type="button" id="5" class="column"></button>
+                <button type="button" id="6" class="column"></button>
+                <button type="button" id="7" class="column"></button>
+                <button type="button" id="8" class="column"></button>
+                <button type="button" id="9" class="column"></button>
+            </div>
+            <div class="winningAlert">
+                
+            </div>
+        </div>
+        <div class="chating">
+            <div class="chatBox">
+                <div class="incomingChat">incoming</div>
+                <div class="outgoingChat">outgoing</div>
+            </div>
+            <div class="chatButtons">
+                <form id="chatForm">
+                    <input class="chatInput" type="text" placeholder="type message" />
+                    <button type="submit" form="chatForm">Send</button>
+                    <button type="button" class="reloadBoard">Restart</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script type="module" src="script.js"></script>
+</body>
+
+</html>
