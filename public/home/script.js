@@ -4,15 +4,15 @@ const form = document.querySelector("#form");
 const playerName = document.querySelector("input");
 const button = document.querySelector("#form > button");
 var currentData = {};
-var winningCases= [
-    [1,2,3],
-    [4,5,6],
-    [7,8,9],
-    [1,4,7],
-    [2,5,8],
-    [3,6,9],
-    [1,5,9],
-    [3,5,7],
+var winningCases = [
+    [1, 2, 3],
+    [4, 5, 6],
+    [7, 8, 9],
+    [1, 4, 7],
+    [2, 5, 8],
+    [3, 6, 9],
+    [1, 5, 9],
+    [3, 5, 7],
 ]
 
 function changeTurn(user, player) {
@@ -28,16 +28,16 @@ function changeTurn(user, player) {
 }
 
 function checkGameOver(winner) {
-    var buttons= document.querySelectorAll(".column");
-    winningCases.forEach( caseArray =>{
-        const first= buttons[caseArray[0] -1].innerHTML;
-        const second= buttons[caseArray[1] -1].innerHTML;
-        const third= buttons[caseArray[2] -1].innerHTML;
-        if (first !== "" && second !== "" && third !== ""){
-            if (first ===second && first === third){
-                document.querySelector(".winningAlert").innerHTML= `<h2>Match won by ${winner.name}</h2>`
-                document.querySelector(".boxes").style.display= "none";
-                document.querySelector(".winningAlert").style.display= "block";
+    var buttons = document.querySelectorAll(".column");
+    winningCases.forEach(caseArray => {
+        const first = buttons[caseArray[0] - 1].innerHTML;
+        const second = buttons[caseArray[1] - 1].innerHTML;
+        const third = buttons[caseArray[2] - 1].innerHTML;
+        if (first !== "" && second !== "" && third !== "") {
+            if (first === second && first === third) {
+                document.querySelector(".winningAlert").innerHTML = `<h2>Match won by ${winner.name}</h2>`
+                document.querySelector(".boxes").style.display = "none";
+                document.querySelector(".winningAlert").style.display = "block";
                 return
             }
         }
@@ -73,7 +73,7 @@ socket.on("matchFound", (data) => {
             socket.emit("clickedData", {
                 turn: currentData.turn,
                 buttonIndex: index,
-                competor: socket.data.name === currentData.playerOne.name ? currentData.playerTwo : currentData.playerOne ,
+                competor: socket.data.name === currentData.playerOne.name ? currentData.playerTwo : currentData.playerOne,
                 currentPlayer: socket.data.name === currentData.playerOne.name ? currentData.playerOne : currentData.playerTwo
             })
             socket.emit("turnChangeClient", { ...currentData })
@@ -95,12 +95,12 @@ socket.on("matchFound", (data) => {
 
     document.querySelector(".reloadBoard").addEventListener("click", (e) => {
         e.preventDefault();
-        document.querySelector(".winningAlert").style.display= "none"
-        document.querySelector(".boxes").style.display= "grid"
-        socket.emit("reloadBoard", {opponent:socket.data.name === currentData.playerOne.name ? currentData.playerTwo : currentData.playerOne})
+        document.querySelector(".winningAlert").style.display = "none"
+        document.querySelector(".boxes").style.display = "grid"
+        socket.emit("reloadBoard", { opponent: socket.data.name === currentData.playerOne.name ? currentData.playerTwo : currentData.playerOne })
         document.querySelectorAll(".column").forEach((elem, index) => {
             const cloneElem = elem.cloneNode(true);
-            cloneElem.innerHTML= "";
+            cloneElem.innerHTML = "";
             elem.parentNode.replaceChild(cloneElem, elem);
             cloneElem.addEventListener("click", () => {
                 cloneElem.innerHTML = currentData.turn;
@@ -108,7 +108,7 @@ socket.on("matchFound", (data) => {
                 socket.emit("clickedData", {
                     turn: currentData.turn,
                     buttonIndex: index,
-                    competor: socket.data.name === currentData.playerOne.name ? currentData.playerTwo : currentData.playerOne ,
+                    competor: socket.data.name === currentData.playerOne.name ? currentData.playerTwo : currentData.playerOne,
                     currentPlayer: socket.data.name === currentData.playerOne.name ? currentData.playerOne : currentData.playerTwo
                 })
                 socket.emit("turnChangeClient", { ...currentData })
@@ -116,11 +116,11 @@ socket.on("matchFound", (data) => {
         })
     })
     socket.on("reloadBoardServer", () => {
-        document.querySelector(".winningAlert").style.display= "none"
-        document.querySelector(".boxes").style.display= "grid"
+        document.querySelector(".winningAlert").style.display = "none"
+        document.querySelector(".boxes").style.display = "grid"
         document.querySelectorAll(".column").forEach((elem, index) => {
             const cloneElem = elem.cloneNode(true);
-            cloneElem.innerHTML= "";
+            cloneElem.innerHTML = "";
             elem.parentNode.replaceChild(cloneElem, elem);
             cloneElem.addEventListener("click", () => {
                 cloneElem.innerHTML = currentData.turn;
@@ -128,11 +128,32 @@ socket.on("matchFound", (data) => {
                 socket.emit("clickedData", {
                     turn: currentData.turn,
                     buttonIndex: index,
-                    competor: socket.data.name === currentData.playerOne.name ? currentData.playerTwo : currentData.playerOne ,
+                    competor: socket.data.name === currentData.playerOne.name ? currentData.playerTwo : currentData.playerOne,
                     currentPlayer: socket.data.name === currentData.playerOne.name ? currentData.playerOne : currentData.playerTwo
                 })
                 socket.emit("turnChangeClient", { ...currentData })
             }, { once: true });
         })
+    })
+
+    document.querySelector("#chatForm").addEventListener("submit", (e) => {
+        e.preventDefault();
+        const message = document.querySelector(".chatInput");
+        var outgoingMessage = document.createElement("div");
+        outgoingMessage.classList.add("outgoingChat");
+        outgoingMessage.innerText = message.value
+        document.querySelector(".chatBox").appendChild(outgoingMessage);
+
+        socket.emit("chatMessage", {
+            competor: socket.data.name === currentData.playerOne.name ? currentData.playerTwo : currentData.playerOne,
+            payload: message.value
+        })
+        message.value = "";
+    })
+    socket.on("chatMessageServer", (data) => {
+        var incomingMessage = document.createElement("div");
+        incomingMessage.classList.add("incomingChat");
+        incomingMessage.innerText = data.payload
+        document.querySelector(".chatBox").appendChild(incomingMessage);
     })
 })

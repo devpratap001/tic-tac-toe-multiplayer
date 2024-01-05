@@ -61,6 +61,14 @@ io.on("connection", (socket) => {
         })
         competetor[0].emit("reloadBoardServer", {...datamatch});
     })
+    socket.on("chatMessage", (data) => {
+        const competetor= rawSockets.filter((elem) => {
+            if (elem.data.name === data.competor.name){
+                return elem;
+            }
+        })
+        competetor[0].emit("chatMessageServer", {payload: data.payload});
+    })
 
     socket.on("disconnect", ()=> {
         sockets.splice(sockets.indexOf(socket.data), 1);
