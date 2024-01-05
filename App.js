@@ -36,7 +36,9 @@ io.on("connection", (socket) => {
                 return elem ;
             }
         })
-        competetor[0].emit("clickedDataServer", (data));
+        if (competetor.length >0){
+            competetor[0].emit("clickedDataServer", (data));
+        }
     })
     socket.on("turnChangeClient", (data) => {
         var socketsPair= [];
@@ -59,7 +61,9 @@ io.on("connection", (socket) => {
                 return elem;
             }
         })
-        competetor[0].emit("reloadBoardServer", {...datamatch});
+        if (competetor.length >0) {
+            competetor[0].emit("reloadBoardServer", {...datamatch});
+        }
     })
     socket.on("chatMessage", (data) => {
         const competetor= rawSockets.filter((elem) => {
@@ -67,7 +71,9 @@ io.on("connection", (socket) => {
                 return elem;
             }
         })
-        competetor[0].emit("chatMessageServer", {payload: data.payload});
+        if (competetor.length >0){
+            competetor[0].emit("chatMessageServer", {payload: data.payload});
+        }
     })
 
     socket.on("disconnect", ()=> {
